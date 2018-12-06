@@ -221,3 +221,11 @@
 
 > Demo中还有利用`jjwt`依赖实现的`hs256`和`rs256`加密方式的jwt
 
+## 设计
+
++ 设计1张表，包含`id`、`user_id`、`last_time`、`login_time`字段
++ 用户登录后
+  + 在上表中插入1条记录，并返回其`id`
+  + 生成1个永不过期的`token`，将返回的`id`存入`token`，取名`tokenId`
+  + 通过`body`将用户的基本信息、权限、`token`返回
++ 用户每次请求时，获取`token`中的`tokenId`，去库中获取该`id`对应的记录，获取`last_time`，判断`token`是否过期，没过期则修改库中该记录的`last_time`
